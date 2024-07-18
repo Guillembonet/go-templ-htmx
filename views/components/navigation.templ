@@ -1,0 +1,50 @@
+package components
+
+templ Navigation() {
+	<nav x-data="{ isOpen: false }" class="bg-slate-100 shadow dark:bg-gray-800">
+		<div class="container px-6 py-4 mx-auto">
+			<div class="lg:flex lg:items-center">
+				<div class="flex items-center justify-between">
+					<a href="/" aria-label="Back to homepage">
+						<svg class="w-auto h-6 sm:h-7" width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+							<style>
+                                .background { fill: #4A90E2; }
+                                .letter { fill: #ffffff; font-family: Arial, sans-serif; font-size: 72px; font-weight: bold; }
+                            </style>
+							<circle class="background" cx="50" cy="50" r="50"></circle>
+							<text class="letter" x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" dy=".1em">B</text>
+						</svg>
+					</a>
+					<!-- Mobile menu button -->
+					<div class="flex lg:hidden">
+						<button x-cloak @click="isOpen = !isOpen" type="button" class="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400" aria-label="toggle menu">
+							<svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16"></path>
+							</svg>
+							<svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']" class="absolute inset-x-0 z-20 flex-1 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-slate-100 dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center lg:justify-between">
+					<div hx-boost="true" hx-target="#content" hx-swap="innerHTML show:window:top" class="flex flex-col text-gray-600 capitalize dark:text-gray-300 lg:flex lg:px-16 lg:flex-row lg:items-center">
+						for _, link := range navigationLinks {
+							<a href={ templ.URL(link.Href) } @click="isOpen = false" class="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">{ link.Text }</a>
+						}
+					</div>
+					<div class="flex justify-center mt-6 lg:flex lg:mt-0 lg:-mx-2">
+						<button aria-label="theme switching" type="button" class="mr-4 group flex max-w-[2.25rem] items-center justify-center" @click="toggleTheme()">
+							<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="relative hidden w-5 h-5 text-white duration-300 dark:inline-block group-hover:rotate-180">
+								<path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"></path>
+							</svg>
+							<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="relative w-4 h-4 text-gray-700 duration-500 group-hover:text-gray-900 group-hover:rotate-[360deg] dark:hidden">
+								<path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd"></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+}

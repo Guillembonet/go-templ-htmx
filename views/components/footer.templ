@@ -1,0 +1,24 @@
+package components
+
+templ Footer() {
+	<footer class="bg-slate-100 dark:bg-gray-900">
+		<div hx-boost="true" hx-target="#content" hx-swap="innerHTML show:window:top" class="container flex flex-col items-center justify-between px-6 py-8 mx-auto lg:flex-row">
+			<a href="/" aria-label="Back to homepage">
+				<svg class="w-auto h-7" width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+					<style>
+                                .background { fill: #4A90E2; }
+                                .letter { fill: #ffffff; font-family: Arial, sans-serif; font-size: 72px; font-weight: bold; }
+                            </style>
+					<circle class="background" cx="50" cy="50" r="50"></circle>
+					<text class="letter" x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" dy=".1em">B</text>
+				</svg>
+			</a>
+			<div class="flex flex-wrap items-center justify-center gap-4 mt-6 lg:gap-6 lg:mt-0">
+				for _, link := range navigationLinks {
+					<a href={ templ.URL(link.Href) } class="text-sm text-gray-600 transition-colors duration-300 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400">{ link.Text }</a>
+				}
+			</div>
+			<p class="mt-6 text-sm text-gray-500 lg:mt-0 dark:text-gray-400">© Copyright 2024 Guillem Bonet</p>
+		</div>
+	</footer>
+}
