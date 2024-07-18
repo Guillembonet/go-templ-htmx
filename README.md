@@ -1,8 +1,8 @@
 # go-templ-htmx
 
-This is a simple template of a server-side rendered Go web application using the [templ](https://github.com/a-h/templ) library for HTML templating and the [htmx](https://htmx.org/) library.
+This is a simple template of a server-side rendered Go web application using the [templ](https://github.com/a-h/templ) library for HTML templating and the [htmx](https://htmx.org/) Javascript library.
 
-It also contains the [Alpine.js](https://alpinejs.dev/) for some component interactivity library and the [toastify](https://apvarun.github.io/toastify-js/) library for toast support.
+It also contains the [Alpine.js](https://alpinejs.dev/) library for some component interactivity and the [toastify JS](https://apvarun.github.io/toastify-js/) library for toast support.
 
 ## Usage
 
