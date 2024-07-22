@@ -6,7 +6,9 @@ It also contains the [Alpine.js](https://alpinejs.dev/) library for some compone
 
 ## Usage
 
-To run the application, with live reaload install [air](https://github.com/air-verse/air) and the `air` command.
+To run the application with live reload, install [air](https://github.com/air-verse/air) and use the `air` command.
+
+Instead, you can also run the application with the `go run cmd/main.go` command and use `go generate ./...` to re-generate the templ files and tailwind css file.
 
 ## Contributing
 

@@ -40,7 +40,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	server, err := server.NewServer(":8080", handlers.NewStatic())
+	server, err := server.NewServer(*flagAddress, handlers.NewStatic())
 	if err != nil {
 		slog.Error("failed to create server", slog.Any("err", err))
 		os.Exit(1)
@@ -49,6 +49,9 @@ func main() {
 	stopped := make(chan struct{})
 	go func() {
 		defer close(stopped)
+
+		slog.Info("starting server", slog.String("address", *flagAddress))
+
 		if err := server.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			slog.Error("server failed", slog.Any("err", err))
 		}
