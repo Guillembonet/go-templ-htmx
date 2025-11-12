@@ -24,6 +24,7 @@ func NewStatic() *Static {
 func (s *Static) Root() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
+			w.WriteHeader(http.StatusNotFound)
 			server.WithBase(r, s.notFound, "Not found", "").Render(r.Context(), w)
 			return
 		}
