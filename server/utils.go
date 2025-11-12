@@ -2,9 +2,9 @@ package server
 
 import (
 	"log/slog"
+	"net/http"
 
 	"github.com/a-h/templ"
-	"github.com/gin-gonic/gin"
 	"github.com/guillembonet/go-templ-htmx/views/layouts"
 )
 
@@ -16,18 +16,18 @@ const (
 )
 
 // requestsFullPage returns true if the request should return a full page, false if it should return a partial page.
-func requestsFullPage(c *gin.Context) bool {
-	htmxRequest := c.GetHeader(HXRequestHeader) == "true"
+func requestsFullPage(r *http.Request) bool {
+	htmxRequest := r.Header.Get(HXRequestHeader) == "true"
 	if !htmxRequest {
 		return true
 	}
-	restoreRequest := c.GetHeader(HXHistoryRestoreRequestHeader) == "true"
+	restoreRequest := r.Header.Get(HXHistoryRestoreRequestHeader) == "true"
 	if restoreRequest {
-		slog.Debug("restoring history")
+		slog.Debug("history restore request", slog.String("path", r.URL.Path))
 	}
 	return restoreRequest
 }
 
-func WithBase(c *gin.Context, component templ.Component, title, description string) templ.Component {
-	return layouts.WithBase(component, title, description, requestsFullPage(c))
+func WithBase(r *http.Request, component templ.Component, title, description string) templ.Component {
+	return layouts.WithBase(component, title, description, requestsFullPage(r))
 }

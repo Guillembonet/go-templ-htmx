@@ -1,15 +1,14 @@
 package server
 
 import (
+	"compress/gzip"
 	"context"
 	"net/http"
 	"time"
 
-	"github.com/gin-contrib/gzip"
-	"github.com/gin-gonic/gin"
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/guillembonet/go-templ-htmx/server/middleware"
-	"github.com/guillembonet/go-templ-htmx/views/assets"
-	"github.com/guillembonet/go-templ-htmx/views/error_pages"
+	"github.com/guillembonet/go-templ-htmx/views"
 )
 
 type Server struct {
@@ -17,32 +16,23 @@ type Server struct {
 }
 
 type Handler interface {
-	Register(*gin.RouterGroup)
+	Register(*http.ServeMux)
 }
 
 func NewServer(addr string, handler ...Handler) (*Server, error) {
-	gin.SetMode(gin.ReleaseMode)
+	mux := http.NewServeMux()
+	mux.Handle("GET /assets/", middleware.AssetsCache(http.FileServer(views.Assets)))
 
-	g := gin.New()
-	g.Use(middleware.Logger, gin.Recovery(),
-		middleware.AssetsCache, gzip.Gzip(gzip.DefaultCompression))
-	g.HTMLRender = &templRenderer{}
-
-	g.StaticFS("/assets", http.FS(assets.Assets))
-
-	g.NoRoute(func(c *gin.Context) {
-		c.HTML(http.StatusNotFound, "", WithBase(c, error_pages.NotFound(), "Not found", ""))
-	})
-
-	rg := g.Group("/")
 	for _, h := range handler {
-		h.Register(rg)
+		h.Register(mux)
 	}
+
+	compressor := chimiddleware.NewCompressor(gzip.DefaultCompression)
 
 	return &Server{
 		server: &http.Server{
 			Addr:    addr,
-			Handler: g,
+			Handler: chimiddleware.Recoverer(middleware.Logger(compressor.Handler(mux))),
 		},
 	}, nil
 }

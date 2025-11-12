@@ -1,15 +1,12 @@
 package middleware
 
 import (
-	"strings"
-
-	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func AssetsCache(c *gin.Context) {
-	if strings.HasPrefix(c.Request.URL.Path, "/assets/") {
-		c.Header("Cache-Control", "private, max-age=86400")
-	}
-	c.Next()
-
+func AssetsCache(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Cache-Control", "private, max-age=86400")
+		next.ServeHTTP(w, r)
+	})
 }

@@ -2,34 +2,40 @@ package middleware
 
 import (
 	"log/slog"
+	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
 )
 
-func Logger(c *gin.Context) {
-	start := time.Now()
-	path := c.Request.URL.Path
-	raw := c.Request.URL.RawQuery
+func Logger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		startTime := time.Now()
+		ww := chimiddleware.NewWrapResponseWriter(w, r.ProtoMajor)
 
-	c.Next()
+		next.ServeHTTP(ww, r)
 
-	if raw != "" {
-		path = path + "?" + raw
-	}
-	statusCode := c.Writer.Status()
+		elapsedTime := time.Since(startTime)
+		path := r.URL.Path
+		raw := r.URL.RawQuery
 
-	attrs := []any{
-		slog.Duration("latency", time.Since(start)),
-		slog.String("method", c.Request.Method),
-		slog.Int("status", statusCode),
-		slog.String("path", path),
-	}
+		if raw != "" {
+			path = path + "?" + raw
+		}
+		statusCode := ww.Status()
 
-	msg := "request"
-	if statusCode >= 500 {
-		slog.Error(msg, attrs...)
-		return
-	}
-	slog.Debug(msg, attrs...)
+		attrs := []any{
+			slog.Duration("latency", elapsedTime),
+			slog.String("method", r.Method),
+			slog.Int("status", statusCode),
+			slog.String("path", path),
+		}
+
+		msg := "request"
+		if statusCode >= 500 {
+			slog.Error(msg, attrs...)
+			return
+		}
+		slog.Debug(msg, attrs...)
+	})
 }
