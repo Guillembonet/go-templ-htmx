@@ -24,8 +24,7 @@ func NewStatic() *Static {
 func (s *Static) Root() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
-			w.WriteHeader(http.StatusNotFound)
-			server.WithBase(r, s.notFound, "Not found", "").Render(r.Context(), w)
+			server.WithBase(s.notFound, "Not found", "", templ.WithStatus(http.StatusNotFound)).ServeHTTP(w, r)
 			return
 		}
 		http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
@@ -33,9 +32,7 @@ func (s *Static) Root() http.Handler {
 }
 
 func (s *Static) Home() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		server.WithBase(r, s.home, "Home", "homepage").Render(r.Context(), w)
-	})
+	return server.WithBase(s.home, "Home", "homepage")
 }
 
 func (s *Static) Register(m *http.ServeMux) {

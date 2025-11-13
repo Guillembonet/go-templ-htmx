@@ -28,6 +28,8 @@ func requestsFullPage(r *http.Request) bool {
 	return restoreRequest
 }
 
-func WithBase(r *http.Request, component templ.Component, title, description string) templ.Component {
-	return layouts.WithBase(component, title, description, requestsFullPage(r))
+func WithBase(component templ.Component, title, description string, options ...func(*templ.ComponentHandler)) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		templ.Handler(layouts.WithBase(component, title, description, requestsFullPage(r)), options...).ServeHTTP(w, r)
+	})
 }
