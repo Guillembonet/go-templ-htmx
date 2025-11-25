@@ -1,20 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@source "../../";
 
 @layer base {
-    pre {
-        overflow-x: auto;
-    }
+  pre {
+    overflow-x: auto;
+  }
 
-    ul, ol {
-        margin: revert;
-        padding: revert;
-    }
-    ul {
-        list-style-type: disc;
-    }
-    ol {
-        list-style-type: decimal;
-    }
+  ul,
+  ol {
+    margin: revert;
+    padding: revert;
+  }
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
+  }
 }
+
